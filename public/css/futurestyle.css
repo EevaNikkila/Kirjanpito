@@ -1,0 +1,37 @@
+.navbar-default {
+  background-color: #fff;
+  font-family: 'Barlow';
+  font-weight: 100;
+  font-size: 1.7vh;
+}
+
+.content {
+  color: #636b6f;
+  font-family: 'Raleway';
+  font-weight: 100;
+}
+
+.mymodal {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+}
+
+.modal-footer {
+  border: none;
+}
+.modal-header {
+  border: none;
+}
+
+#success, #errors{
+  position: absolute;
+  left: 50%;
+  display: none;
+}
+
+select {
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f7f7f7;
+}
