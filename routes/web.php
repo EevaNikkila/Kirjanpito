@@ -45,4 +45,9 @@ Route::post('/api/assignments', 'AssignmentController@store');
 Route::post('/api/assignments/delete', 'AssignmentController@destroy');
 Route::post('/api/assignments/edit', 'AssignmentController@update');
 
+Route::get('/api/works', 'AssignmentController@allWorks');
+Route::post('/api/works', 'AssignmentController@storeWork');
+Route::post('/api/works/delete', 'AssignmentController@destroyWork');
+Route::post('/api/works/edit', 'AssignmentController@updateWork');
+
 Route::auth();

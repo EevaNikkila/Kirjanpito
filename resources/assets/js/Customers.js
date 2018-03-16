@@ -710,9 +710,10 @@ class Page extends React.Component{
 		fetch(this.props.url, {credentials: 'include', method: 'POST',
 		body: JSON.stringify(data), headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}})
-			.then(response => response.json().then(data => ({data: data}))
-			.then(this.loadDataFromServer()))
-			.then(this.hideModal("Tiedot lisätty!"));
+		.then(response => response.json()
+			.then(data => ({data: data, status: response.status}))
+			.then(res => {this.setState({ data: res.data })})
+			.then(this.hideModal("Tiedot lisätty!")));
 	}
 	// Delete
 	handleDelete(data){
@@ -720,17 +721,20 @@ class Page extends React.Component{
 		fetch(this.props.url + "/delete", {credentials: 'include',
 		method: 'POST', body: jsondata, headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}})
-			.then(this.loadDataFromServer())
-			.then(this.hideModal("Tiedot poistettu!"));
+		.then(response => response.json()
+			.then(data => ({data: data, status: response.status}))
+			.then(res => {this.setState({ data: res.data })})
+			.then(this.hideModal("Tiedot poistettu!")));
 	}
 	// Edit
 	handleEdit(data){
 		fetch(this.props.url + '/edit', {credentials: 'include', method: 'POST',
 		body: JSON.stringify(data), headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}})
-			.then(response => response.json().then(data => ({data: data}))
-			.then(this.loadDataFromServer()))
-			.then(this.hideModal("Tiedot päivitetty!"));
+		.then(response => response.json()
+			.then(data => ({data: data, status: response.status}))
+			.then(res => {this.setState({ data: res.data })})
+			.then(this.hideModal("Tiedot päivitetty!")));
 	}
 	hideModal(message) {
 		$("#modal").hide();

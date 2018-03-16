@@ -55,7 +55,7 @@ class AccountingController extends Controller
             'target' => $postdata->target
         ]);
 
-        return;
+        return $this->all($request);
     }
 
     public function destroy(Request $request)
@@ -63,7 +63,7 @@ class AccountingController extends Controller
       $request_content = $request->getContent();
       $post_data = json_decode($request_content);
         Transaction::where('id', $post_data->id)->delete();
-        return;
+        return $this->all($request);
     }
 
 
@@ -80,6 +80,6 @@ class AccountingController extends Controller
             'description' => $postdata->description,
             'user_id' => $postdata->user_id,
             'target' => $postdata->target));
-        return;
+        return $this->all($request);
     }
 }

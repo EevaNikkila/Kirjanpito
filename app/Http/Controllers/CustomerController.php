@@ -43,7 +43,7 @@ class CustomerController extends Controller
             'businessID' => $postdata->businessID
         ]);
 
-        return;
+        return $this->all($request);
     }
 
     public function destroy(Request $request)
@@ -51,7 +51,7 @@ class CustomerController extends Controller
       $request_content = $request->getContent();
       $postdata = json_decode($request_content);
         Customer::where('id', $postdata->id)->delete();
-        return;
+        return $this->all($request);
     }
 
     public function update(Request $request)
@@ -64,6 +64,6 @@ class CustomerController extends Controller
             'phone' => $postdata->phone,
             'email' => $postdata->email,
             'businessID' => $postdata->businessID));
-        return;
+        return $this->all($request);
     }
 }

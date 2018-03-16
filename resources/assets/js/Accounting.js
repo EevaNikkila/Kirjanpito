@@ -261,12 +261,7 @@ class AddForm extends React.Component{
 	handleSubmit(e){
 		e.preventDefault();
 		var account = this.state.account;
-		var date = this.state.date;
-		var place = this.state.place;
 		var amount = this.state.amount;
-		var vat = this.state.vat;
-		var target = this.state.target;
-		var description = this.state.description;
 		if(!amount | !account){
 			ReactDOM.render(
 			    <Errors error='Määrä- ja Tyyppi-kentät eivät voi olla tyhjiä!' />,
@@ -278,8 +273,9 @@ class AddForm extends React.Component{
 			amount = Math.abs(amount)*-1;
 		}
 		$("#errors").hide();
-		this.state.onDataSubmit({date: date, account: account, place: place,
-			amount: amount,	vat: vat, target: target, description: description, user_id: this.props.user});
+		this.state.onDataSubmit({date: this.state.date, account: account, place: this.state.place,
+			amount: amount,	vat: this.state.vat, target: this.state.target,
+			description: this.state.description, user_id: this.props.user});
 		this.setState({date: date, account: account, place: '1910 - Pankkitili', amount: '',	vat: '0.24', target: '', description: ''});
 	}
 	render(){
@@ -404,9 +400,10 @@ class Page extends React.Component{
 		fetch(this.props.url, {credentials: 'include', method: 'POST',
 		body: JSON.stringify(data), headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}})
-			.then(response => response.json().then(data => ({data: data}))
-			.then(this.loadDataFromServer()))
-			.then(this.hideModal("Tiedot lisätty!"));
+		.then(response => response.json()
+			.then(data => ({data: data, status: response.status}))
+			.then(res => {this.setState({ data: res.data })})
+			.then(this.hideModal("Tiedot lisätty!")));
 	}
 	// Delete
 	handleDelete(data){
@@ -414,8 +411,11 @@ class Page extends React.Component{
 		fetch(this.props.url + "/delete", {credentials: 'include',
 		method: 'POST', body: jsondata, headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}})
-			.then(this.loadDataFromServer())
-			.then(this.hideModal("Tiedot poistettu!"));
+		.then(response => response.json()
+			.then(data => ({data: data, status: response.status}))
+			.then(res => {this.setState({ data: res.data });
+		})
+			.then(this.hideModal("Tiedot poistettu!")));
 	}
 	// Edit
 	handleEdit(data){
