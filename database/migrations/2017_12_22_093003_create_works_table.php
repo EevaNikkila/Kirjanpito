@@ -18,6 +18,7 @@ class CreateWorksTable extends Migration
             $table->string('description')->nullable();
             $table->decimal('amount');
             $table->date('date');
+            $table->boolean('billed')->default(false);
             $table->integer('user_id')->index();
             $table->integer('task_id')->index();
             $table->integer('customer_id')->index();

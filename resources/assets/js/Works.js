@@ -42,7 +42,9 @@ class EditModal extends React.Component{
 	}
 	constructor(props) {
     super(props);
-    this.state = {name: this.props.name, price: this.props.price, unit: this.props.unit};
+    this.state = {date: this.props.date, amount: this.props.amount, onEdit: this.props.onEdit, input: "",
+			description: this.props.description, customer_id: this.props.customer_id, billed: this.props.billed,
+		task_id: this.props.task_id,  onDataSubmit: this.props.onDataSubmit};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -51,20 +53,36 @@ class EditModal extends React.Component{
 	}
 	handleSubmit(e){
 		e.preventDefault();
-		var name = this.state.name;
-		if(!name){
+		var date = this.state.date;
+		var amount = this.state.amount;
+		if(!amount || !date){
 			ReactDOM.render(
-			    <Errors error='Nimi-kenttä ei voi olla tyhjä!' />,
+			    <Errors error='Määrä- ja Päivämäärä-kentät eivät voi olla tyhjiä!' />,
 			    document.getElementById('errors')
 			);
 			return;
 		}
 		$("#errors").hide();
-		this.props.onEdit({name: name, price: this.state.price, unit: this.state.unit,
-			id: this.props.id, user_id: this.props.user});
+		this.state.onEdit({date: date, amount: amount, customer_id: this.state.customer_id,
+			id: this.props.id, billed: this.state.billed,
+			description: this.state.description, task_id: this.state.task_id, user_id: this.props.user});
 	}
 	render() {
 		$("#modal").show();
+		var customers = this.props.customers;
+		var options = [];
+		for (var i in customers) {
+			var name = customers[i].name;
+			var id = customers[i].id;
+					options.push(<Option value={id} text={name} key={id}  />);
+		}
+		var tasks = this.props.tasks;
+		var taskoptions = [];
+		for (var i in tasks) {
+			var name = tasks[i].name;
+			var id = tasks[i].id;
+					taskoptions.push(<Option value={id} text={name} key={id}  />);
+		}
 		return (
 			<div className="mymodal">
 			<div className="modal-dialog" role="document">
@@ -76,29 +94,47 @@ class EditModal extends React.Component{
 						</button>
 
 			      </div>
-						<form className="editForm form-horizontal" onSubmit={this.handleSubmit}>
-						<div className="modal-body">
+						<div className="editForm">
+							<form className="form-horizontal" id="addform" onSubmit={this.handleSubmit}>
 							<div className='form-group row'>
-								<label htmlFor="name" className='col-sm-3 col-form-label'>Nimi</label>
-								<input type="text" name="name" className='col-sm-9'
-								value={this.state.name} onChange={this.handleChange} />
-							</div>
-							<div className='form-group row'>
-								<label htmlFor="price" className='col-sm-3 col-form-label'>Hinta</label>
-								<input type="number" name="price" className='col-sm-9'
-								value={this.state.price} onChange={this.handleChange} />
+								<label htmlFor="customer_id" className='col-sm-4 col-form-label'>Asiakas</label>
+									<select name='customer_id' value={this.state.customer_id} onChange={this.handleChange}>
+									<option value="">Valitse asiakas</option>
+									{options}
+									</select>
 							</div>
 							<div className='form-group row'>
-								<label htmlFor="unit" className='col-sm-3 col-form-label'>Yksikkö</label>
-								<input type="text" name="unit" className='col-sm-9'
-								value={this.state.unit} onChange={this.handleChange} />
+								<label htmlFor="task_id" className='col-sm-4 col-form-label'>Työ</label>
+									<select name='task_id' value={this.state.task_id} onChange={this.handleChange}>
+									<option value="">Valitse työ</option>
+									{taskoptions}
+									</select>
 							</div>
-						</div>
-							<div className="modal-footer">
-				        <button type="button" className="btn btn-secondary" onClick={this.cancel}>Peruuta</button>
-								<input type="submit" className='btn btn-primary' name="addCustomer" value="Tallenna muutokset" />
+							<div className='form-group row'>
+								<label htmlFor="date" className='col-sm-4'>Päivämäärä</label>
+								<input type="date" name="date" className='col-sm-6'
+								value={this.state.date} onChange={this.handleChange} />
 							</div>
-						</form>
+								<div className='form-group row'>
+									<label htmlFor="amount" className='col-sm-4'>Määrä</label>
+									<input type="number" step="0.001" name="amount" className='col-sm-6'
+									value={this.state.amount} onChange={this.handleChange} />
+								</div>
+								<div className='form-group row'>
+									<label htmlFor="description" className='col-sm-4'>Kuvaus</label>
+									<input type="text" name="description" className='col-sm-6'
+									value={this.state.description} onChange={this.handleChange} />
+								</div>
+								<div className='form-group row'>
+									<label htmlFor="billed" className='col-sm-4'>Laskutettu</label>
+									<select value={this.state.billed} name="billed" className="col-cm-6" onChange={this.handleChange}>
+										 <option value="0">Ei</option>
+										 <option value="1">Kyllä</option>
+							 	 </select>
+								 </div>
+									<input type="submit" className='btn btn-primary' name="addWorks" value="Muokkaa" />
+							</form>
+					</div>
 			    </div>
 			  </div>
 			</div>
@@ -156,8 +192,11 @@ class Work extends React.Component{
   }
 	showEditModal(){
 		ReactDOM.render(
-				<EditModal name={this.props.name} price={this.props.price} unit={this.props.unit}
-				id={this.props.id} onEdit={this.props.onEdit} />,
+				<EditModal user={this.props.user} customers={this.props.customers}
+				tasks={this.props.tasks} description={this.props.description} amount={this.props.amount}
+				task_id={this.props.task_id} customer_id={this.props.customer_id}
+				date={this.props.date} onEdit={this.handleEdit} user={this.props.user_id}
+				id={this.props.id} onEdit={this.props.onEdit} billed={this.props.billed} />,
 				document.getElementById('modal')
 		);
 	}
@@ -168,10 +207,6 @@ class Work extends React.Component{
 		);
 	}
 	render() {
-
-			console.log(this.props.customers)
-
-				console.log(this.props.customer_id)
 		var tasks = this.props.tasks;
 		var taskname = "";
 		for (var i in tasks) {
@@ -185,13 +220,18 @@ class Work extends React.Component{
 				customername = this.props.customers[i].name;
 			}
 		}
+		var laskutettuclass = "";
+		if (this.props.billed == true){
+			laskutettuclass = "fa fa-btn fa-check";
+		} else laskutettuclass = "fa fa-btn fa-ban";
 		return (
 			<tr>
-				<td>{ this.props.description }</td>
-				<td>{ this.props.amount }</td>
-				<td>{ this.props.date }</td>
 				<td>{ taskname }</td>
+				<td>{ this.props.date }</td>
+				<td>{ this.props.amount }</td>
 				<td>{ customername }</td>
+				<td>{ this.props.description }</td>
+				<td><i className={laskutettuclass}></i></td>
 				<td><button type="button" className="btn btn-primary" onClick={this.showEditModal}><i className="fa fa-btn fa-edit"></i></button></td>
 				<td><button type="button" className="btn btn-danger" onClick={this.showDeleteModal}><i className="fa fa-btn fa-trash"></i></button></td>
 			</tr>
@@ -203,28 +243,28 @@ class Work extends React.Component{
 class AddForm extends React.Component{
 	constructor(props) {
     super(props);
-    this.state = {date: '', amount: 1, description: '', customer_id: 0, task_id: 0,  onDataSubmit: this.props.onDataSubmit};
+    this.state = {date: '', amount: 1, description: '', billed: false, customer_id: 0, task_id: 0,  onDataSubmit: this.props.onDataSubmit};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 	handleChange(e){
 		 this.setState({ [e.target.name]: e.target.value });
-	 		console.log(this.state.task_id)
 	}
 	handleSubmit(e){
 		e.preventDefault();
 		var date = this.state.date;
 		var amount = this.state.amount;
 		var description = this.state.description;
-		if(!amount){
+		if(!amount || !date){
 			ReactDOM.render(
-			    <Errors error='Määrä- ja Tyyppi-kentät eivät voi olla tyhjiä!' />,
+			    <Errors error='Määrä- ja Päivämäärä-kentät eivät voi olla tyhjiä!' />,
 			    document.getElementById('errors')
 			);
 			return;
 		}
 		$("#errors").hide();
-		this.state.onDataSubmit({date: date, amount: amount, customer_id: this.state.customer_id,
+		this.state.onDataSubmit({date: date, amount: amount,
+			customer_id: this.state.customer_id, billed: this.state.billed,
 			description: description, task_id: this.state.task_id, user_id: this.props.user});
 		this.setState({date: date, amount: 1,	description: ''});
 	}
@@ -241,7 +281,6 @@ class AddForm extends React.Component{
 		for (var i in tasks) {
 			var name = tasks[i].name;
 			var id = tasks[i].id;
-			console.log(id)
 					taskoptions.push(<Option value={id} text={name} key={id}  />);
 		}
 		return (
@@ -249,16 +288,16 @@ class AddForm extends React.Component{
 			<h2>Lisää työtunnit</h2>
 				<form className="form-horizontal" id="addform" onSubmit={this.handleSubmit}>
 				<div className='form-group row'>
-					<label htmlFor="customer" className='col-sm-2 col-form-label'>Asiakas</label>
-						<select name='customer' onChange={this.handleChange}>
-						<option value={this.state.customer}>Valitse asiakas</option>
+					<label htmlFor="customer_id" className='col-sm-2 col-form-label'>Asiakas</label>
+						<select name='customer_id' onChange={this.handleChange}>
+						<option value="">Valitse asiakas</option>
 						{options}
 						</select>
 				</div>
 				<div className='form-group row'>
-					<label htmlFor="taks" className='col-sm-2 col-form-label'>Työ</label>
-						<select name='task' onChange={this.handleChange}>
-						<option value={this.state.task}>Valitse työ</option>
+					<label htmlFor="task_id" className='col-sm-2 col-form-label'>Työ</label>
+						<select name='task_id' onChange={this.handleChange}>
+						<option value="">Valitse työ</option>
 						{taskoptions}
 						</select>
 				</div>
@@ -276,6 +315,11 @@ class AddForm extends React.Component{
 						<label htmlFor="description" className='col-sm-2'>Kuvaus</label>
 						<input type="text" name="description" className='col-xs-6'
 						value={this.state.description} onChange={this.handleChange} />
+					</div>
+					<div className='form-group row'>
+						<label htmlFor="billed" className='col-sm-2'>Laskutettu</label>
+						<input type="checkbox" name="billed" className='col-xs-6'
+						value="1" onChange={this.handleChange} />
 					</div>
 						<input type="submit" className='btn btn-primary' name="addWorks" value="Lisää työtunnit" />
 				</form>
@@ -373,7 +417,6 @@ fetch('api/assignments', {credentials: 'include'})
     super(props);
 		this.hideModal = this.hideModal.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.showAddModal = this.showAddModal.bind(this);
 		this.handleEdit = this.handleEdit.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
     this.state = { data: [], user: 0, url: this.props.url,
@@ -385,19 +428,12 @@ fetch('api/assignments', {credentials: 'include'})
 		this.getCustomers();
 		this.getTasks();
 	}
-	showAddModal(){
-		ReactDOM.render(
-				<AddForm user={this.state.user} onDataSubmit={this.handleSubmit} />,
-				document.getElementById('modal')
-		);
-	}
   render() {
 		var table = [];
 		var data = this.state.data;
 		for (var i in data) {
-			console.log(data[i])
-    	table.push(<Work description={data[i].description} amount={data[i].amount}
-				task_id={data[i].task_id} customer_id={data[i].customer_id}
+    	table.push(<Work description={data[i].description} amount={data[i].amount} billed={data[i].billed}
+				task_id={data[i].task_id} customer_id={data[i].customer_id} user_id={this.state.user}
 				customers={this.state.customers} onDelete={this.handleDelete} tasks={this.state.tasks}
 				date={data[i].date} id={data[i].id} onEdit={this.handleEdit} key={data[i].id} />);
 		}
@@ -407,11 +443,22 @@ fetch('api/assignments', {credentials: 'include'})
 			<AddForm user={this.state.user} customers={this.state.customers}
 			tasks={this.state.tasks}  onDataSubmit={this.handleSubmit} />
 			<table className="table">
+			<thead>
+				<tr>
+					<th>Työ</th>
+					<th>Päivämäärä</th>
+					<th>Määrä</th>
+					<th>Asiakas</th>
+					<th>Kuvaus</th>
+					<th>Laskutettu</th>
+					<th>Muokkaa</th>
+					<th>Poista</th>
+				</tr>
+			</thead>
 				<tbody>
 					{table}
 				</tbody>
 			</table>
-			<button type="button" className="btn btn-secondary" onClick={this.showAddModal}>Lisää työ</button>
 		</div>
     );
   }

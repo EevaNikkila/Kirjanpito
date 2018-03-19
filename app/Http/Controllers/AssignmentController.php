@@ -102,6 +102,7 @@ class AssignmentController extends Controller
                 'amount' => $postdata->amount,
                 'date' => $postdata->date,
                 'user_id' => $postdata->user_id,
+                'billed' => $postdata->billed,
                 'customer_id' => $postdata->customer_id,
                 'task_id' => $postdata->task_id
             ]);
@@ -127,7 +128,7 @@ class AssignmentController extends Controller
                   'description' => $postdata->description,
                   'amount' => $postdata->amount,
                   'date' => $postdata->date,
-                  'user_id' => $postdata->user_id,
+                  'billed' => $postdata->billed,
                   'customer_id' => $postdata->customer_id,
                   'task_id' => $postdata->task_id
               ));
