@@ -11,6 +11,10 @@
   font-weight: 100;
 }
 
+.container {
+  padding-top: 30px;
+}
+
 .mymodal {
   position: absolute;
   top: 30%;
@@ -34,4 +38,9 @@ select {
     padding: 10px;
     border-radius: 4px;
     background-color: #f7f7f7;
+}
+
+@media (min-width: 1200px) {
+.container {
+    max-width: 1340px;
 }

@@ -47,6 +47,9 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ url('/assignments') }}">Tuntikirjaus</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url('/reports') }}">Raportit</a>
+      </li>
     </ul>
     <!-- Right Side Of Navbar -->
     <ul class="nav navbar-nav navbar-right">

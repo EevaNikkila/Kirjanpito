@@ -462,9 +462,10 @@ handleChange(e){
 		}
     return (
     	<div>
-			<h1>Työtunnit</h1>
+
 			<AddForm user={this.state.user} customers={this.state.customers}
 			tasks={this.state.tasks}  onDataSubmit={this.handleSubmit} />
+			<h1>Työtunnit</h1>
 			<div className='row'>
 				<label htmlFor="customer_id" className='col-sm-4 col-form-label'>Kaikki asiakkaat</label>
 					<select name='customer_id' value={this.state.customer_id} onChange={this.handleChange}>

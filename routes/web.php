@@ -50,4 +50,7 @@ Route::post('/api/works', 'AssignmentController@storeWork');
 Route::post('/api/works/delete', 'AssignmentController@destroyWork');
 Route::post('/api/works/edit', 'AssignmentController@updateWork');
 
+/* Reports */
+Route::get('/reports', 'ReportController@index');
+
 Route::auth();
