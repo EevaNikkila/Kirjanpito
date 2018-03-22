@@ -374,6 +374,9 @@ fetch('api/assignments', {credentials: 'include'})
  this.setState({ tasks: res.data });
 }));
 }
+handleChange(e){
+	 this.setState({ customer_id: e.target.value });
+}
 	// Add
 	handleSubmit(data){
 		var newdata;
@@ -418,9 +421,10 @@ fetch('api/assignments', {credentials: 'include'})
 		this.hideModal = this.hideModal.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleEdit = this.handleEdit.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
     this.state = { data: [], user: 0, url: this.props.url,
-			customers: [], isLoaded: false, tasks: []  };
+			customers: [], isLoaded: false, tasks: [], customer_id: ""  };
   }
 	componentDidMount(){
 		this.loadDataFromServer();
@@ -431,17 +435,43 @@ fetch('api/assignments', {credentials: 'include'})
   render() {
 		var table = [];
 		var data = this.state.data;
-		for (var i in data) {
-    	table.push(<Work description={data[i].description} amount={data[i].amount} billed={data[i].billed}
-				task_id={data[i].task_id} customer_id={data[i].customer_id} user_id={this.state.user}
-				customers={this.state.customers} onDelete={this.handleDelete} tasks={this.state.tasks}
-				date={data[i].date} id={data[i].id} onEdit={this.handleEdit} key={data[i].id} />);
+		if (this.state.customer_id == "") {
+			for (var i in data) {
+	    	table.push(<Work description={data[i].description} amount={data[i].amount} billed={data[i].billed}
+					task_id={data[i].task_id} customer_id={data[i].customer_id} user_id={this.state.user}
+					customers={this.state.customers} onDelete={this.handleDelete} tasks={this.state.tasks}
+					date={data[i].date} id={data[i].id} onEdit={this.handleEdit} key={data[i].id} />);
+			}
+		} else {
+			for (var i in data) {
+				if (this.state.customer_id == data[i].customer_id){
+					table.push(<Work description={data[i].description} amount={data[i].amount} billed={data[i].billed}
+						task_id={data[i].task_id} customer_id={data[i].customer_id} user_id={this.state.user}
+						customers={this.state.customers} onDelete={this.handleDelete} tasks={this.state.tasks}
+						date={data[i].date} id={data[i].id} onEdit={this.handleEdit} key={data[i].id} />);
+				}
+			}
+		}
+
+		var customers = this.state.customers;
+		var customeroptions = [];
+		for (var i in customers) {
+			var name = customers[i].name;
+			var id = customers[i].id;
+					customeroptions.push(<Option value={id} text={name} key={id}  />);
 		}
     return (
     	<div>
 			<h1>Työtunnit</h1>
 			<AddForm user={this.state.user} customers={this.state.customers}
 			tasks={this.state.tasks}  onDataSubmit={this.handleSubmit} />
+			<div className='row'>
+				<label htmlFor="customer_id" className='col-sm-4 col-form-label'>Kaikki asiakkaat</label>
+					<select name='customer_id' value={this.state.customer_id} onChange={this.handleChange}>
+					<option value="">Valitse asiakas</option>
+					{customeroptions}
+					</select>
+			</div>
 			<table className="table">
 			<thead>
 				<tr>
