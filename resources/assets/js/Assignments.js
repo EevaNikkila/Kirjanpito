@@ -71,17 +71,17 @@ class EditModal extends React.Component{
 						<div className="modal-body">
 							<div className='form-group row'>
 								<label htmlFor="name" className='col-sm-3 col-form-label'>Nimi</label>
-								<input type="text" name="name" className='col-sm-9'
+								<input type="text" name="name" className='col-sm-8'
 								value={this.state.name} onChange={this.handleChange} />
 							</div>
 							<div className='form-group row'>
 								<label htmlFor="price" className='col-sm-3 col-form-label'>Hinta</label>
-								<input type="number" name="price" className='col-sm-9'
+								<input type="number" name="price" className='col-sm-8'
 								value={this.state.price} onChange={this.handleChange} />
 							</div>
 							<div className='form-group row'>
 								<label htmlFor="unit" className='col-sm-3 col-form-label'>Yksikkö</label>
-								<input type="text" name="unit" className='col-sm-9'
+								<input type="text" name="unit" className='col-sm-8'
 								value={this.state.unit} onChange={this.handleChange} />
 							</div>
 						</div>
@@ -164,8 +164,8 @@ class Task extends React.Component{
 				<td>{ this.props.name }</td>
 				<td>{ this.props.price }€</td>
 				<td>/{ this.props.unit }</td>
-				<td><button type="button" className="btn btn-primary" onClick={this.showEditModal}><i className="fa fa-btn fa-edit"></i></button></td>
-				<td><button type="button" className="btn btn-danger" onClick={this.showDeleteModal}><i className="fa fa-btn fa-trash"></i></button></td>
+				<td><button type="button" className="btn btn-primary custom-btn" onClick={this.showEditModal}><i className="fa fa-btn fa-edit"></i></button></td>
+				<td><button type="button" className="btn btn-danger custom-btn" onClick={this.showDeleteModal}><i className="fa fa-btn fa-trash"></i></button></td>
 			</tr>
 		);
 	}
@@ -224,17 +224,17 @@ class AddForm extends React.Component{
 						<div className="modal-body">
 							<div className='form-group row'>
 								<label htmlFor="name" className='col-sm-3 col-form-label'>Nimi</label>
-								<input type="text" name="name" className='col-sm-9'
+								<input type="text" name="name" className='col-sm-8'
 								value={this.state.name} onChange={this.handleChange} />
 							</div>
 							<div className='form-group row'>
 								<label htmlFor="price" className='col-sm-3 col-form-label'>Hinta</label>
-								<input type="number" name="price" className='col-sm-9'
+								<input type="number" name="price" className='col-sm-8'
 								value={this.state.price} onChange={this.handleChange} />
 							</div>
 							<div className='form-group row'>
 								<label htmlFor="unit" className='col-sm-3 col-form-label'>Yksikkö</label>
-								<input type="text" name="unit" className='col-sm-9'
+								<input type="text" name="unit" className='col-sm-8'
 								value={this.state.unit} onChange={this.handleChange} />
 							</div>
 							</div>
@@ -350,7 +350,7 @@ class Page extends React.Component{
 					{table}
 				</tbody>
 			</table>
-			<button type="button" className="btn btn-secondary" onClick={this.showAddModal}>Lisää työ</button>
+			<button type="button" className="btn btn-primary" onClick={this.showAddModal}>Lisää työ</button>
 		</div>
     );
   }

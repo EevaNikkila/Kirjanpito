@@ -5,27 +5,94 @@
   font-size: 1.7vh;
 }
 
-.content {
+#content, #works, #tasks {
   color: #636b6f;
   font-family: 'Raleway';
   font-weight: 100;
+  margin-top: 30px;
 }
 
-.container {
-  padding-top: 30px;
+
+.tabs {
+  margin-right: 30px;
+  background-color: #00a9ff;
+  border-radius: 5px 5px 0 0;
+  color: #FFF;
 }
 
-.mymodal {
-  position: absolute;
-  top: 30%;
-  left: 30%;
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,.7);
 }
+
+.red {
+  color: #bc2567;
+}
+
+.green {
+  color: #7fb779;
+}
+
+.tabs:hover{
+  background-color: #7cd3ff;
+}
+
+.addForm {
+  padding: 30px 0;
+}
+
+.table td, .table th {
+    max-width: 200px;
+}
+
+.btn-primary {
+  background-color: #FFF;
+  color: #007bff;
+}
+
+.btn-danger {
+    background-color: #fff;
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.modal-dialog {
+    max-width: 600px;
+    margin: 4.75rem auto;
+}
+
+.btn-secondary {
+    background-color: #fff;
+    color: #000;
+    border-color: #868e96;
+}
+
+.custom_select {
+  margin: 20px;
+}
+
+.accountingForm {
+  background-color: #f7f7f9;
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 0 0 10px 10px;
+}
+.assignmentForm, #tasks {
+  background-color: #f7f7f9;
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+}
+
 
 .modal-footer {
   border: none;
 }
 .modal-header {
   border: none;
+}
+
+.custom-btn {
+    padding: .200rem .40rem;
 }
 
 #success, #errors{
@@ -42,5 +109,5 @@ select {
 
 @media (min-width: 1200px) {
 .container {
-    max-width: 1340px;
+    max-width: 1640px;
 }

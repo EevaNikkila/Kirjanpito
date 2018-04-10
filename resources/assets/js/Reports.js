@@ -145,8 +145,8 @@ class Page extends React.Component{
 						{reportoptions}
 						</select>
 				</div>
-				<button type="button" className="btn btn-secondary" onClick={this.handleTabs} value="expense">Menot</button>
-				<button type="button" className="btn btn-secondary" onClick={this.handleTabs} value="income">Tulot</button>
+				<button type="button" className="btn btn-secondary" id="expense" onClick={this.handleTabs} value="expense">Menot</button>
+				<button type="button" className="btn btn-secondary" id="income" onClick={this.handleTabs} value="income">Tulot</button>
 				<h2>{header}</h2>
 			 <table className="table">
 				 <thead>

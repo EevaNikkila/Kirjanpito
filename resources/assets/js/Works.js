@@ -94,7 +94,7 @@ class EditModal extends React.Component{
 						</button>
 
 			      </div>
-						<div className="editForm">
+						<div className="editForm modal-body">
 							<form className="form-horizontal" id="addform" onSubmit={this.handleSubmit}>
 							<div className='form-group row'>
 								<label htmlFor="customer_id" className='col-sm-4 col-form-label'>Asiakas</label>
@@ -222,8 +222,8 @@ class Work extends React.Component{
 		}
 		var laskutettuclass = "";
 		if (this.props.billed == true){
-			laskutettuclass = "fa fa-btn fa-check";
-		} else laskutettuclass = "fa fa-btn fa-ban";
+			laskutettuclass = "fa fa-btn fa-check green";
+		} else laskutettuclass = "fa fa-btn fa-ban red";
 		return (
 			<tr>
 				<td>{ taskname }</td>
@@ -232,8 +232,8 @@ class Work extends React.Component{
 				<td>{ customername }</td>
 				<td>{ this.props.description }</td>
 				<td><i className={laskutettuclass}></i></td>
-				<td><button type="button" className="btn btn-primary" onClick={this.showEditModal}><i className="fa fa-btn fa-edit"></i></button></td>
-				<td><button type="button" className="btn btn-danger" onClick={this.showDeleteModal}><i className="fa fa-btn fa-trash"></i></button></td>
+				<td><button type="button" className="btn btn-primary custom-btn" onClick={this.showEditModal}><i className="fa fa-btn fa-edit"></i></button></td>
+				<td><button type="button" className="btn btn-danger custom-btn" onClick={this.showDeleteModal}><i className="fa fa-btn fa-trash"></i></button></td>
 			</tr>
 		);
 	}
@@ -284,7 +284,7 @@ class AddForm extends React.Component{
 					taskoptions.push(<Option value={id} text={name} key={id}  />);
 		}
 		return (
-			<div className="addForm">
+			<div className=" assignmentForm">
 			<h2>Lisää työtunnit</h2>
 				<form className="form-horizontal" id="addform" onSubmit={this.handleSubmit}>
 				<div className='form-group row'>
@@ -467,8 +467,7 @@ handleChange(e){
 			tasks={this.state.tasks}  onDataSubmit={this.handleSubmit} />
 			<h1>Työtunnit</h1>
 			<div className='row'>
-				<label htmlFor="customer_id" className='col-sm-4 col-form-label'>Kaikki asiakkaat</label>
-					<select name='customer_id' value={this.state.customer_id} onChange={this.handleChange}>
+					<select name='customer_id' className="custom_select" value={this.state.customer_id} onChange={this.handleChange}>
 					<option value="">Valitse asiakas</option>
 					{customeroptions}
 					</select>

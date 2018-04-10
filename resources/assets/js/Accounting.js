@@ -239,8 +239,12 @@ class Transaction extends React.Component{
 				<td>{ this.props.vat }</td>
 				<td>{ this.props.target }</td>
 				<td>{ this.props.description }</td>
-				<td><button type="button" className="btn btn-primary" onClick={this.showEditModal}><i className="fa fa-btn fa-edit"></i></button></td>
-				<td><button type="button" className="btn btn-danger" onClick={this.showDeleteModal}><i className="fa fa-btn fa-trash"></i></button></td>
+				<td><button type="button" className="btn btn-primary custom-btn" onClick={this.showEditModal}>
+					<i onClick={this.showEditModal} className="fa fa-btn fa-edit"></i>
+				</button></td>
+				<td><button type="button" className="btn btn-danger custom-btn" onClick={this.showDeleteModal}>
+					<i onClick={this.showDeleteModal} className="fa fa-btn fa-trash"></i>
+				</button></td>
 			</tr>
 		);
 	}
@@ -307,7 +311,7 @@ class AddForm extends React.Component{
 			}
 		}
 		return (
-			<div className="addForm">
+			<div className="addForm accountingForm">
 			<h2>{submit}</h2>
 				<form className="form-horizontal" id="addform" onSubmit={this.handleSubmit}>
 				<div className='form-group row'>
@@ -448,6 +452,14 @@ class Page extends React.Component{
 		this.getUser();
 	}
 	handleTabs(e){
+			if (e.target.value == "expense"){
+				$("#expense").addClass("active");
+				$("#income").removeClass("active");
+			} else {
+				$("#income").addClass("active");
+				$("#expense").removeClass("active");
+			}
+
 		 this.setState({ tab: e.target.value });
 	}
   render() {
@@ -485,8 +497,14 @@ class Page extends React.Component{
     return (
     	<div>
 	   		<h1>Kirjanpito</h1>
-				<button type="button" className="btn btn-secondary" onClick={this.handleTabs} value="expense">Menot</button>
-				<button type="button" className="btn btn-secondary" onClick={this.handleTabs} value="income">Tulot</button>
+				<ul className="nav nav-tabs">
+	  			<li className="nav-item">
+						<button type="button" className="nav-link active" onClick={this.handleTabs} id="expense" value="expense">Menot</button>
+					</li>
+					<li className="nav-item">
+						<button type="button" className="nav-link" onClick={this.handleTabs} id="income" value="income">Tulot</button>
+					</li>
+				</ul>
 				<AddForm data={this.state.data} user={this.state.user} type={this.state.tab}
 				accountTypes={this.state.accountTypes} onDataSubmit={this.handleSubmit} />
 				<h2>{header}</h2>
