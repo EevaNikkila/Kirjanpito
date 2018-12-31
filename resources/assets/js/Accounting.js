@@ -227,8 +227,12 @@ class Transaction extends React.Component{
 	}
 	render() {
 		if (this.props.accountTypes.length != 0) {
-			var accountTypeName = this.props.accountTypes[this.props.account-1].name;
-			var accountTypeNumber = this.props.accountTypes[this.props.account-1].number;
+			for (var type in this.props.accountTypes) {
+				if (this.props.accountTypes[type].id == this.props.account) {
+					var accountTypeName = this.props.accountTypes[type].name;
+					var accountTypeNumber = this.props.accountTypes[type].number;
+				}
+			}
 		}
 		return (
 			<tr>

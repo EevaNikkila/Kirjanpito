@@ -63,7 +63,7 @@ class AccountTableSeeder extends Seeder {
         DB::table('accounts')->insert([
             'name' => 'Yksityisnostot rahana',
             'number' => 2365,
-            'type' => 'varallisuus',
+            'type' => 'velka',
         ]);
         DB::table('accounts')->insert([
             'name' => 'Myyntisaamisten ALV-velka',
@@ -73,7 +73,7 @@ class AccountTableSeeder extends Seeder {
         DB::table('accounts')->insert([
             'name' => 'Yksityissijoitukset rahana',
             'number' => 2361,
-            'type' => 'velka',
+            'type' => 'varallisuus',
         ]);
         DB::table('accounts')->insert([
             'name' => 'Pitkäaikaiset lainat',

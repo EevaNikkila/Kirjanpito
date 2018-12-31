@@ -21,7 +21,7 @@
 }
 
 .navbar-dark .navbar-nav .nav-link {
-    color: rgba(255,255,255,.7);
+  color: rgba(255,255,255,.7);
 }
 
 .red {
@@ -41,7 +41,7 @@
 }
 
 .table td, .table th {
-    max-width: 200px;
+  max-width: 200px;
 }
 
 .btn-primary {
@@ -50,20 +50,32 @@
 }
 
 .btn-danger {
-    background-color: #fff;
-    color: #dc3545;
-    border-color: #dc3545;
+  background-color: #fff;
+  color: #dc3545;
+  border-color: #dc3545;
 }
 
 .modal-dialog {
-    max-width: 600px;
-    margin: 4.75rem auto;
+  max-width: 600px;
+  margin: 4.75rem auto;
+}
+.modal-content {
+  -webkit-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+}
+
+.modal-footer {
+  border: none;
+}
+.modal-header {
+  border: none;
 }
 
 .btn-secondary {
-    background-color: #fff;
-    color: #000;
-    border-color: #868e96;
+  background-color: #fff;
+  color: #000;
+  border-color: #868e96;
 }
 
 .custom_select {
@@ -84,30 +96,33 @@
 }
 
 
-.modal-footer {
-  border: none;
-}
-.modal-header {
-  border: none;
-}
+
 
 .custom-btn {
-    padding: .200rem .40rem;
+  padding: .200rem .40rem;
 }
 
 #success, #errors{
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
   display: none;
+  z-index: 999;
 }
 
 select {
-    padding: 10px;
-    border-radius: 4px;
-    background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f7f7f7;
 }
 
-@media (min-width: 1200px) {
+.workingHours {
+  padding-left: 10px;
+}
+
 .container {
     max-width: 1640px;
 }

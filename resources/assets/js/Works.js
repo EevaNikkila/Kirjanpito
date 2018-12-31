@@ -132,7 +132,10 @@ class EditModal extends React.Component{
 										 <option value="1">Kyllä</option>
 							 	 </select>
 								 </div>
-									<input type="submit" className='btn btn-primary' name="addWorks" value="Muokkaa" />
+								 <div className="modal-footer">
+								 <button type="button" className="btn btn-secondary" onClick={this.cancel}>Peruuta</button>
+								 <input type="submit" className='btn btn-primary' name="addWorks" value="Tallenna" />
+							  </div>
 							</form>
 					</div>
 			    </div>
@@ -465,30 +468,32 @@ handleChange(e){
 
 			<AddForm user={this.state.user} customers={this.state.customers}
 			tasks={this.state.tasks}  onDataSubmit={this.handleSubmit} />
-			<h1>Työtunnit</h1>
-			<div className='row'>
-					<select name='customer_id' className="custom_select" value={this.state.customer_id} onChange={this.handleChange}>
-					<option value="">Valitse asiakas</option>
-					{customeroptions}
-					</select>
+			<div className="workingHours">
+				<h1>Työtunnit</h1>
+				<div className='row'>
+						<select name='customer_id' className="custom_select" value={this.state.customer_id} onChange={this.handleChange}>
+						<option value="">Valitse asiakas</option>
+						{customeroptions}
+						</select>
+				</div>
+				<table className="table">
+				<thead>
+					<tr>
+						<th>Työ</th>
+						<th>Päivämäärä</th>
+						<th>Määrä</th>
+						<th>Asiakas</th>
+						<th>Kuvaus</th>
+						<th>Laskutettu</th>
+						<th>Muokkaa</th>
+						<th>Poista</th>
+					</tr>
+				</thead>
+					<tbody>
+						{table}
+					</tbody>
+				</table>
 			</div>
-			<table className="table">
-			<thead>
-				<tr>
-					<th>Työ</th>
-					<th>Päivämäärä</th>
-					<th>Määrä</th>
-					<th>Asiakas</th>
-					<th>Kuvaus</th>
-					<th>Laskutettu</th>
-					<th>Muokkaa</th>
-					<th>Poista</th>
-				</tr>
-			</thead>
-				<tbody>
-					{table}
-				</tbody>
-			</table>
 		</div>
     );
   }

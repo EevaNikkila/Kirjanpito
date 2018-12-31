@@ -16,8 +16,12 @@ class Transaction extends React.Component{
   }
 	render() {
 		if (this.props.accountTypes.length != 0) {
-			var accountTypeName = this.props.accountTypes[this.props.account-1].name;
-			var accountTypeNumber = this.props.accountTypes[this.props.account-1].number;
+			for (var type in this.props.accountTypes) {
+				if (this.props.accountTypes[type].id == this.props.account) {
+					var accountTypeName = this.props.accountTypes[type].name;
+					var accountTypeNumber = this.props.accountTypes[type].number;
+				}
+			}
 		}
 		return (
 			<tr>
@@ -83,7 +87,7 @@ class Page extends React.Component{
 		this.hideModal = this.hideModal.bind(this);
 		this.handleTabs = this.handleTabs.bind(this);
 		this.handleReportType = this.handleReportType.bind(this);
-    this.state = { data: [], user: 0, tab: "expense", accountTypes: [],
+    this.state = { data: [], user: 0, tab: "alv", accountTypes: [],
 		url: this.props.url, isLoaded: false, reporttype: "" };
   }
 	componentDidMount(){
@@ -116,50 +120,27 @@ class Page extends React.Component{
 		}
 	var table;
 	var header;
-	var target;
-	var place;
-	if (this.state.tab == "income") {
+	if (this.state.tab == "alv") {
 		table = incomes;
-		target = "Maksaja";
 		header = "Tulot";
-		place = "Maksettu tilille";
-	} else if (this.state.tab == "expense") {
+	} else if (this.state.tab == "kirjanpito") {
 		table = expenses;
-		target = "Myyjä";
 		header = "Menot";
-		place = "Maksettu tililtä";
 	} else table = "Error!";
-	var customers = ["ALV-raportti", "Kirjanpitoraportti", "Raportti"];
-	var reportoptions = [];
-	for (var i in customers) {
-		var name = customers[i];
-				reportoptions.push(<Option value={name} text={name} key={i}  />);
-	}
     return (
     	<div>
 	   		<h1>Raportit</h1>
-				<div className='row'>
-					<label htmlFor="reporttype" className='col-sm-4 col-form-label'>Valitse raportti</label>
-						<select name='reporttype' value={this.state.reporttype} onChange={this.handleReportType}>
-						<option value="">Valitse raportti</option>
-						{reportoptions}
-						</select>
-				</div>
-				<button type="button" className="btn btn-secondary" id="expense" onClick={this.handleTabs} value="expense">Menot</button>
-				<button type="button" className="btn btn-secondary" id="income" onClick={this.handleTabs} value="income">Tulot</button>
+				<button type="button" className="btn btn-secondary" id="alv" onClick={this.handleTabs} value="alv">ALV-raportti</button>
+				<button type="button" className="btn btn-secondary" id="kirjanpito" onClick={this.handleTabs} value="kirjanpito">Kirjanpitoraportti</button>
 				<h2>{header}</h2>
 			 <table className="table">
 				 <thead>
 					 <tr>
 						 <th>Tyyppi</th>
 						 <th>Päivä</th>
-						 <th>{place}</th>
 						 <th>Määrä</th>
 						 <th>ALV</th>
-						 <th>{target}</th>
 						 <th>Kuvaus</th>
-						 <th>Muokkaa</th>
-						 <th>Poista</th>
 					 </tr>
 				 </thead>
 				 <tbody>
