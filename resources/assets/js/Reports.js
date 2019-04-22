@@ -9,11 +9,16 @@ class Option extends React.Component{
 	}
 }
 
-// Transaction
-class Transaction extends React.Component{
+// Alv-raportti
+class Alv extends React.Component{
 	constructor(props) {
     super(props);
+		this.state = {quarter:'1', year:'2019'};
+    this.handleChange = this.handleChange.bind(this);
   }
+	handleChange(e){
+		 this.setState({ [e.target.name]: e.target.value });
+	}
 	render() {
 		if (this.props.accountTypes.length != 0) {
 			for (var type in this.props.accountTypes) {
@@ -23,18 +28,67 @@ class Transaction extends React.Component{
 				}
 			}
 		}
+		switch (this.state.quarter) {
+			case "1":
+				var startdate = new Date(this.state.year + "-01-01");
+				var enddate = new Date(this.state.year + "-03-31");
+				break;
+			case "2":
+				var startdate = new Date(this.state.year + "-04-01");
+				var enddate = new Date(this.state.year + "-06-30");
+				break;
+			case "3":
+				var startdate = new Date(this.state.year + "-07-01");
+				var enddate = new Date(this.state.year + "-09-30");
+				break;
+			case "4":
+				var startdate = new Date(this.state.year + "-10-01");
+				var enddate = new Date(this.state.year + "-12-31");
+				break;
+			default:
+				var startdate = new Date(this.state.year + "-01-01");
+				var enddate = new Date(this.state.year + "-03-31");
+				break;
+		}
+		var incomes = this.props.incomes;
+		var expenses = this.props.expenses;
+		var incomesvat = 0;
+		var expensesvat = 0;
+		for (var item in incomes) {
+			var date = new Date(incomes[item].date);
+			if (date > startdate && date < enddate) {
+				incomesvat += parseFloat(incomes[item].amount);
+			}
+		}
+		for (var item in expenses) {
+			var date = new Date(expenses[item].date);
+			if (date > startdate && date < enddate) {
+				expensesvat += parseFloat(expenses[item].amount);
+			}
+		}
+		var total = parseFloat((incomesvat + expensesvat)*0.24).toFixed(2);
+		incomesvat = parseFloat(incomesvat*0.24).toFixed(2);
+		expensesvat = parseFloat(expensesvat*0.24).toFixed(2);
 		return (
-			<tr>
-				<td>{accountTypeNumber} - { accountTypeName }</td>
-				<td>{ this.props.date }</td>
-				<td>{ this.props.place }</td>
-				<td>{ this.props.amount }</td>
-				<td>{ this.props.vat }</td>
-				<td>{ this.props.target }</td>
-				<td>{ this.props.description }</td>
-				<td><button type="button" className="btn btn-primary" onClick={this.showEditModal}><i className="fa fa-btn fa-edit"></i></button></td>
-				<td><button type="button" className="btn btn-danger" onClick={this.showDeleteModal}><i className="fa fa-btn fa-trash"></i></button></td>
-			</tr>
+			<div className="report">
+				Tilikausi:
+				<select name="quarter" onChange={this.handleChange}>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+				</select>
+				/
+				<select>
+					<option value="2019">2019</option>
+				</select>
+				<h2>Vero (24%)</h2>
+				{incomesvat}
+				<h2>Vähennettävä vero</h2>
+				{expensesvat}
+				<h2>Maksettava vero / Palautuksen määrä</h2>
+				{total}
+			</div>
 		);
 	}
 }
@@ -102,51 +156,34 @@ class Page extends React.Component{
 		 this.setState({ reporttype: e.target.value });
 	}
   render() {
+		var data = this.state.data;
+		var table;
+		var header
 		var incomes = [];
 		var expenses = [];
-		var data = this.state.data;
 		for (var i in data) {
 			if (data[i].amount > 0) {
-				incomes.push(<Transaction amount={data[i].amount} place={data[i].place} transactionType="income"
-				vat={data[i].vat} key={data[i].id} date={data[i].date} accountTypes={this.state.accountTypes}
-				target={data[i].target} description={data[i].description} onDelete={this.handleDelete} user={this.state.user}
-				onEdit={this.handleEdit} id={data[i].id} account={data[i].account_id} />);
+				incomes.push(data[i]);
 			} else {
-				expenses.push(<Transaction amount={data[i].amount} place={data[i].place} transactionType="expense"
-					vat={data[i].vat} key={data[i].id} date={data[i].date} accountTypes={this.state.accountTypes}
-				target={data[i].target} description={data[i].description} onDelete={this.handleDelete}
-				onEdit={this.handleEdit} id={data[i].id} account={data[i].account_id} user={this.state.user} />);
+				expenses.push(data[i]);
 			}
-		}
-	var table;
-	var header;
-	if (this.state.tab == "alv") {
-		table = incomes;
-		header = "Tulot";
-	} else if (this.state.tab == "kirjanpito") {
-		table = expenses;
-		header = "Menot";
-	} else table = "Error!";
+		};
+		if (this.state.tab == "alv") {
+			table = <Alv incomes={incomes} expenses={expenses} user={this.state.user} type={this.state.tab}
+				accountTypes={this.state.accountTypes} />;
+			header = "ALV-raportti";
+		} else if (this.state.tab == "kirjanpito") {
+			table = <Tuloslaskelma incomes={incomes} expenses={expenses} user={this.state.user} type={this.state.tab}
+				accountTypes={this.state.accountTypes} />;
+			header = "Tuloslaskelma";
+		} else table = "Error!";
     return (
     	<div>
 	   		<h1>Raportit</h1>
 				<button type="button" className="btn btn-secondary" id="alv" onClick={this.handleTabs} value="alv">ALV-raportti</button>
-				<button type="button" className="btn btn-secondary" id="kirjanpito" onClick={this.handleTabs} value="kirjanpito">Kirjanpitoraportti</button>
+				<button type="button" className="btn btn-secondary" id="kirjanpito" onClick={this.handleTabs} value="kirjanpito">Tuloslaskelma</button>
 				<h2>{header}</h2>
-			 <table className="table">
-				 <thead>
-					 <tr>
-						 <th>Tyyppi</th>
-						 <th>Päivä</th>
-						 <th>Määrä</th>
-						 <th>ALV</th>
-						 <th>Kuvaus</th>
-					 </tr>
-				 </thead>
-				 <tbody>
-					 {table}
-				 </tbody>
-			 </table>
+					{table}
 			 </div>
     );
   }
