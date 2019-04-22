@@ -234,10 +234,12 @@ class Transaction extends React.Component{
 				}
 			}
 		}
+		var date = new Date(this.props.date);
+		date = date.toLocaleDateString("fi-FI");
 		return (
 			<tr>
 				<td>{accountTypeNumber} - { accountTypeName }</td>
-				<td>{ this.props.date }</td>
+				<td>{ date }</td>
 				<td>{ this.props.place }</td>
 				<td>{ this.props.amount }</td>
 				<td>{ this.props.vat }</td>

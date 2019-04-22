@@ -10,7 +10,7 @@ class TransactionRepository {
   // Get transactions for a single user
   public function forUser(User $user) {
       return Transaction::where('user_id', $user->id)
-                      ->orderBy('created_at', 'desc')
+                      ->orderBy('date', 'desc')
                       ->get();
   }
 
@@ -18,7 +18,7 @@ class TransactionRepository {
   public function getTransaction(Transaction $transaction) {
       return Transaction::where('id', $transaction->id)->get();
   }
-  
+
 public function getUsers() {
         return User::orderBy('created_at', 'desc')->get();
     }

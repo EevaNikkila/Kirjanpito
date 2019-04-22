@@ -57,18 +57,25 @@ class Alv extends React.Component{
 		for (var item in incomes) {
 			var date = new Date(incomes[item].date);
 			if (date > startdate && date < enddate) {
+
+				if (incomes[item].vat != "0") {
 				incomesvat += parseFloat(incomes[item].amount);
+			}
 			}
 		}
 		for (var item in expenses) {
 			var date = new Date(expenses[item].date);
 			if (date > startdate && date < enddate) {
-				expensesvat += parseFloat(expenses[item].amount);
+				if (expenses[item].vat != "0") {
+					expensesvat += parseFloat(expenses[item].amount);
+				}
 			}
 		}
 		var total = parseFloat((incomesvat + expensesvat)*0.24).toFixed(2);
-		incomesvat = parseFloat(incomesvat*0.24).toFixed(2);
-		expensesvat = parseFloat(expensesvat*0.24).toFixed(2);
+		incomesvat = parseFloat(incomesvat).toFixed(2)
+		expensesvat = parseFloat(expensesvat).toFixed(2)
+		var incomesvattotal = parseFloat(incomesvat*0.24).toFixed(2);
+		var expensesvattotal = parseFloat(expensesvat*0.24).toFixed(2);
 		return (
 			<div className="report">
 				Tilikausi:
@@ -82,10 +89,14 @@ class Alv extends React.Component{
 				<select>
 					<option value="2019">2019</option>
 				</select>
-				<h2>Vero (24%)</h2>
+				<h2>Tulot (24%)</h2>
 				{incomesvat}
-				<h2>Vähennettävä vero</h2>
+				<h2>Vero (24%)</h2>
+				{incomesvattotal}
+				<h2>Menot (24%)</h2>
 				{expensesvat}
+				<h2>Vähennettävä vero</h2>
+				{expensesvattotal}
 				<h2>Maksettava vero / Palautuksen määrä</h2>
 				{total}
 			</div>
