@@ -444,13 +444,16 @@ class Page extends React.Component{
 			document.getElementById('modal'));
 	}
 	constructor(props) {
+		var today = new Date();
+		var year = today.getFullYear();
     super(props);
 		this.hideModal = this.hideModal.bind(this);
 		this.handleTabs = this.handleTabs.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleEdit = this.handleEdit.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
-    this.state = { data: [], user: 0, tab: "expense", accountTypes: [], url: this.props.url, isLoaded: false };
+		this.handleYear = this.handleYear.bind(this);
+    this.state = { data: [], user: 0, tab: "expense", accountTypes: [], url: this.props.url, isLoaded: false, year: year };
   }
 	componentDidMount(){
 		this.loadDataFromServer();
@@ -468,21 +471,34 @@ class Page extends React.Component{
 
 		 this.setState({ tab: e.target.value });
 	}
+	handleYear(e){
+		 this.setState({ year: e.target.value });
+	}
   render() {
+		var today = new Date();
+		var year = today.getFullYear();
+		var yearoptions = [];
+		for (i = 2019; i <= year; i++) {
+			yearoptions.push(<Option value={i} text={i} key={i}  />);
+		}
 		var incomes = [];
 		var expenses = [];
 		var data = this.state.data;
 		for (var i in data) {
-			if (data[i].amount > 0) {
-				incomes.push(<Transaction amount={data[i].amount} place={data[i].place} transactionType="income"
-				vat={data[i].vat} key={data[i].id} date={data[i].date} accountTypes={this.state.accountTypes}
-				target={data[i].target} description={data[i].description} onDelete={this.handleDelete} user={this.state.user}
-				onEdit={this.handleEdit} id={data[i].id} account={data[i].account_id} />);
-			} else {
-				expenses.push(<Transaction amount={data[i].amount} place={data[i].place} transactionType="expense"
+			var date = new Date(data[i].date);
+			var data_year = date.getFullYear();
+			if (data_year == this.state.year) {
+				if (data[i].amount > 0) {
+					incomes.push(<Transaction amount={data[i].amount} place={data[i].place} transactionType="income"
 					vat={data[i].vat} key={data[i].id} date={data[i].date} accountTypes={this.state.accountTypes}
-				target={data[i].target} description={data[i].description} onDelete={this.handleDelete}
-				onEdit={this.handleEdit} id={data[i].id} account={data[i].account_id} user={this.state.user} />);
+					target={data[i].target} description={data[i].description} onDelete={this.handleDelete} user={this.state.user}
+					onEdit={this.handleEdit} id={data[i].id} account={data[i].account_id} />);
+				} else {
+					expenses.push(<Transaction amount={data[i].amount} place={data[i].place} transactionType="expense"
+						vat={data[i].vat} key={data[i].id} date={data[i].date} accountTypes={this.state.accountTypes}
+					target={data[i].target} description={data[i].description} onDelete={this.handleDelete}
+					onEdit={this.handleEdit} id={data[i].id} account={data[i].account_id} user={this.state.user} />);
+				}
 			}
 		}
 	var table;
@@ -514,6 +530,12 @@ class Page extends React.Component{
 				<AddForm data={this.state.data} user={this.state.user} type={this.state.tab}
 				accountTypes={this.state.accountTypes} onDataSubmit={this.handleSubmit} />
 				<h2>{header}</h2>
+				<div className='row'>
+						<select name='year' className="custom_select" value={this.state.year} onChange={this.handleYear}>
+						<option value="">Vuosi</option>
+						{yearoptions}
+						</select>
+				</div>
 			 <table className="table">
 				 <thead>
 					 <tr>

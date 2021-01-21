@@ -13,7 +13,9 @@ class Option extends React.Component{
 class Alv extends React.Component{
 	constructor(props) {
     super(props);
-		this.state = {quarter:'1', year:'2019'};
+		var today = new Date();
+		var year = today.getFullYear();
+		this.state = {quarter:'1', year:year};
     this.handleChange = this.handleChange.bind(this);
   }
 	handleChange(e){
@@ -71,6 +73,12 @@ class Alv extends React.Component{
 				}
 			}
 		}
+		var today = new Date();
+		var year = today.getFullYear();
+		var yearoptions = [];
+		for (var i = year; i >= 2019; i--) {
+			yearoptions.push(<Option value={i} text={i} key={i}  />);
+		}
 		var total = parseFloat((incomesvat + expensesvat)*0.24).toFixed(2);
 		incomesvat = parseFloat(incomesvat).toFixed(2)
 		expensesvat = parseFloat(expensesvat).toFixed(2)
@@ -86,8 +94,8 @@ class Alv extends React.Component{
 					<option value="4">4</option>
 				</select>
 				/
-				<select>
-					<option value="2019">2019</option>
+				<select name="year" onChange={this.handleChange}>
+					{yearoptions}
 				</select>
 				<h2>Tulot (24%)</h2>
 				{incomesvat}

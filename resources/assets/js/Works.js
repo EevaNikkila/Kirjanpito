@@ -186,6 +186,47 @@ class DeleteModal extends React.Component{
 	}
 }
 
+class BilledModal extends React.Component{
+	constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+		this.state = { onBilled: this.props.onBilled };
+  }
+	cancel(){
+		ReactDOM.render(
+				<div></div>,
+				document.getElementById('modal')
+		);
+		$("#modal").hide();
+	}
+	handleSubmit(e){
+		this.state.onBilled();
+	}
+	render() {
+		$("#modal").show();
+		return (
+			<div className="mymodal">
+			<div className="modal-dialog" role="document">
+			    <div className="modal-content">
+			      <div className="modal-header">
+						<button type="button" className="close" aria-label="Close" onClick={this.cancel}>
+							<span aria-hidden="true">&times;</span>
+						</button>
+			      </div>
+			      <div className="modal-body">
+			        <h5 className="modal-title">Oletko varma, että haluat merkitä kaikki laskutetuiksi?</h5>
+			      </div>
+			      <div className="modal-footer">
+			        <button type="button" className="btn btn-secondary" onClick={this.cancel}>Peruuta</button>
+			        <button type="button" className="btn btn-danger" onClick={this.handleSubmit}>Merkitse</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		);
+	}
+}
+
 // Work
 class Work extends React.Component{
 	constructor(props) {
@@ -380,6 +421,12 @@ fetch('api/assignments', {credentials: 'include'})
 handleChange(e){
 	 this.setState({ customer_id: e.target.value });
 }
+showBilledModal(){
+	ReactDOM.render(
+			<BilledModal onBilled={this.handleBilled} />,
+			document.getElementById('modal')
+	);
+}
 	// Add
 	handleSubmit(data){
 		var newdata;
@@ -412,6 +459,18 @@ handleChange(e){
 			.then(res => {this.setState({ data: res.data })})
 			.then(this.hideModal("Tiedot päivitetty!")));
 	}
+	// Edit
+	handleBilled(){
+		var data = this.state.data;
+		for (var i in data) {
+			if (this.state.customer_id == "" || this.state.customer_id == data[i].customer_id) {
+				if (data[i].billed == 0) {
+					data[i].billed = 1;
+					this.handleEdit(data[i]);
+				}
+			}
+		}
+	}
 	hideModal(message) {
 		$("#modal").hide();
 		ReactDOM.render(<Success message={message} />,
@@ -426,6 +485,8 @@ handleChange(e){
 		this.handleEdit = this.handleEdit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
+		this.handleBilled = this.handleBilled.bind(this);
+		this.showBilledModal = this.showBilledModal.bind(this);
     this.state = { data: [], user: 0, url: this.props.url,
 			customers: [], isLoaded: false, tasks: [], customer_id: ""  };
   }
@@ -438,8 +499,12 @@ handleChange(e){
   render() {
 		var table = [];
 		var data = this.state.data;
+		var laskuttamatta = 0;
 		if (this.state.customer_id == "") {
 			for (var i in data) {
+				if (data[i].billed == 0) {
+					laskuttamatta += parseInt(data[i].amount);
+				}
 	    	table.push(<Work description={data[i].description} amount={data[i].amount} billed={data[i].billed}
 					task_id={data[i].task_id} customer_id={data[i].customer_id} user_id={this.state.user}
 					customers={this.state.customers} onDelete={this.handleDelete} tasks={this.state.tasks}
@@ -448,6 +513,9 @@ handleChange(e){
 		} else {
 			for (var i in data) {
 				if (this.state.customer_id == data[i].customer_id){
+				if (data[i].billed == 0) {
+					laskuttamatta += parseInt(data[i].amount);
+				}
 					table.push(<Work description={data[i].description} amount={data[i].amount} billed={data[i].billed}
 						task_id={data[i].task_id} customer_id={data[i].customer_id} user_id={this.state.user}
 						customers={this.state.customers} onDelete={this.handleDelete} tasks={this.state.tasks}
@@ -455,7 +523,6 @@ handleChange(e){
 				}
 			}
 		}
-
 		var customers = this.state.customers;
 		var customeroptions = [];
 		for (var i in customers) {
@@ -465,7 +532,6 @@ handleChange(e){
 		}
     return (
     	<div>
-
 			<AddForm user={this.state.user} customers={this.state.customers}
 			tasks={this.state.tasks}  onDataSubmit={this.handleSubmit} />
 			<div className="workingHours">
@@ -475,6 +541,10 @@ handleChange(e){
 						<option value="">Valitse asiakas</option>
 						{customeroptions}
 						</select>
+				</div>
+				<div className="row">
+					<div className="col col-md-9">Laskuttamatta: {laskuttamatta}</div>
+					<div className="col col-md-3"><button type="button" className="btn btn-default custom-btn" onClick={this.showBilledModal}>Merkitse kaikki laskutetuiksi</button></div>
 				</div>
 				<table className="table">
 				<thead>
