@@ -503,7 +503,7 @@ showBilledModal(){
 		if (this.state.customer_id == "") {
 			for (var i in data) {
 				if (data[i].billed == 0) {
-					laskuttamatta += parseInt(data[i].amount);
+					laskuttamatta += parseFloat(data[i].amount);
 				}
 	    	table.push(<Work description={data[i].description} amount={data[i].amount} billed={data[i].billed}
 					task_id={data[i].task_id} customer_id={data[i].customer_id} user_id={this.state.user}
@@ -514,7 +514,7 @@ showBilledModal(){
 			for (var i in data) {
 				if (this.state.customer_id == data[i].customer_id){
 				if (data[i].billed == 0) {
-					laskuttamatta += parseInt(data[i].amount);
+					laskuttamatta += parseFloat(data[i].amount);
 				}
 					table.push(<Work description={data[i].description} amount={data[i].amount} billed={data[i].billed}
 						task_id={data[i].task_id} customer_id={data[i].customer_id} user_id={this.state.user}

@@ -112,6 +112,199 @@ class Alv extends React.Component{
 	}
 }
 
+// Transaction
+class Transaction extends React.Component{
+	constructor(props) {
+    super(props);
+  }
+	render() {
+
+		var date = new Date(this.props.date);
+		date = date.toLocaleDateString("fi-FI");
+		return (
+			<tr>
+				<td></td>
+				<td>{ date }</td>
+				<td>{ this.props.place }</td>
+				<td>{ this.props.amount }</td>
+				<td>{ this.props.vat }</td>
+				<td>{ this.props.target }</td>
+				<td>{ this.props.description }</td>
+			</tr>
+		);
+	}
+}
+
+
+class Header extends React.Component{
+	constructor(props) {
+    super(props);
+  }
+	render() {
+		return (
+			<tr>
+				<td colSpan="6"><strong>{ this.props.name }</strong></td>
+			</tr>
+		);
+	}
+}
+
+class Total extends React.Component{
+	constructor(props) {
+    super(props);
+  }
+	render() {
+		return (
+			<tr className="total">
+				<td><strong>Yhteensä:</strong></td>
+				<td colSpan="6"><strong>{ this.props.value } €</strong></td>
+			</tr>
+		);
+	}
+}
+
+
+class Tuloslaskelma extends React.Component{
+	constructor(props) {
+    super(props);
+		var today = new Date();
+		var year = today.getFullYear();
+		this.state = {year:year};
+    this.handleChange = this.handleChange.bind(this);
+  }
+	handleChange(e){
+		 this.setState({ [e.target.name]: e.target.value });
+	}
+	render() {
+
+		var incomes = this.props.incomes;
+		var expenses = this.props.expenses;
+		var today = new Date();
+		var year = today.getFullYear();
+		var incomeaccounts= [];
+		var expenseaccounts= [];
+		var accounts= [];
+		var thisyearincome = [];
+		var thisyearexpenses = [];
+		for (var item in incomes) {
+			var date = new Date(incomes[item].date);
+			if (this.state.year == date.getFullYear()) {
+				incomeaccounts.push(incomes[item].account_id);
+				thisyearincome.push(incomes[item]);
+			}
+		}
+		for (var item in expenses) {
+			var date = new Date(expenses[item].date);
+			if (this.state.year == date.getFullYear()) {
+				if (expenseaccounts.includes(expenses[item].account_id) == false) {
+					expenseaccounts.push(expenses[item].account_id);
+				}
+				thisyearexpenses.push(expenses[item]);
+			}
+		}
+		var expensetotal = 0;
+		var renderexpenses = [];
+		for (var item in expenseaccounts) {
+			if (this.props.accountTypes.length != 0) {
+				for (var type in this.props.accountTypes) {
+					if (expenseaccounts[item] == this.props.accountTypes[type].id) {
+						var header = this.props.accountTypes[type].name;
+						renderexpenses.push(<Header name={header} key={this.props.accountTypes[type].id} />);
+						var total = 0;
+						for (var i in thisyearexpenses) {
+							if (thisyearexpenses[i].account_id == expenseaccounts[item]) {
+								total += parseFloat(thisyearexpenses[i].amount);
+								renderexpenses.push(<Transaction amount={thisyearexpenses[i].amount} place={thisyearexpenses[i].place}
+								vat={thisyearexpenses[i].vat} key={thisyearexpenses[i].id} date={thisyearexpenses[i].date} accountTypes={this.state.accountTypes}
+								target={thisyearexpenses[i].target} description={thisyearexpenses[i].description} onDelete={this.handleDelete} user={this.state.user}
+								onEdit={this.handleEdit} id={thisyearexpenses[i].id} account={thisyearexpenses[i].account_id} />);
+							}
+						}
+						var key = "expenses" + item;
+						renderexpenses.push(<Total value={total} key={key} />);
+						expensetotal += total;
+					}
+				}
+			}
+		}
+		var renderincome = [];
+		var incometotal = 0;
+		for (var item in incomeaccounts) {
+			if (this.props.accountTypes.length != 0) {
+				for (var type in this.props.accountTypes) {
+					if (incomeaccounts[item] == this.props.accountTypes[type].id) {
+						var header = this.props.accountTypes[type].name;
+						renderincome.push(<Header name={header} key={this.props.accountTypes[type].id} />);
+						var total = 0;
+						for (var i in thisyearincome) {
+							total += parseFloat(thisyearincome[i].amount);
+							if (thisyearincome[i].account_id == incomeaccounts[item]) {
+								renderincome.push(<Transaction amount={thisyearincome[i].amount} place={thisyearincome[i].place}
+								vat={thisyearincome[i].vat} key={thisyearincome[i].id} date={thisyearincome[i].date} accountTypes={this.state.accountTypes}
+								target={thisyearincome[i].target} description={thisyearincome[i].description} user={this.state.user} id={thisyearincome[i].id}
+								account={thisyearincome[i].account_id} />);
+							}
+						}
+						var key = "income" + item;
+						incometotal += total;
+						renderincome.push(<Total value={total} key={key} />);
+					}
+				}
+			}
+		}
+		var yearoptions = [];
+		for (var i = year; i >= 2019; i--) {
+			yearoptions.push(<Option value={i} text={i} key={i}  />);
+		}
+		var tulos = incometotal + expensetotal;
+		return (
+			<div className="report">
+				Tilikausi:
+				<select name="year" onChange={this.handleChange}>
+					{yearoptions}
+				</select>
+				<h2>Yhteensä</h2>
+				<p><strong>Menot:</strong> {expensetotal}</p>
+				<p><strong>Tulot:</strong> {incometotal} </p>
+				<p><strong>Tulos:</strong> {tulos}</p>
+				<h2>Menot</h2>
+				<table className="table">
+					<thead>
+						<tr>
+							<th>Kirjanpitotili</th>
+							<th>Päivä</th>
+							<th>Tili</th>
+							<th>Määrä</th>
+							<th>ALV</th>
+							<th>Myyjä</th>
+							<th>Kuvaus</th>
+						</tr>
+					</thead>
+					<tbody>
+						{renderexpenses}
+					</tbody>
+				</table>
+				<h2>Tulot</h2>
+				<table className="table">
+				<thead>
+					<tr>
+						<th>Kirjanpitotili</th>
+						<th>Päivä</th>
+						<th>Tili</th>
+						<th>Määrä</th>
+						<th>ALV</th>
+						<th>Maksaja</th>
+						<th>Kuvaus</th>
+					</tr>
+				</thead>
+					<tbody>
+						{renderincome}
+					</tbody>
+				</table>
+			</div>
+		);
+	}
+}
 
 
 // Whole page
