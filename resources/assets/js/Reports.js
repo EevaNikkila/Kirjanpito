@@ -189,7 +189,9 @@ class Tuloslaskelma extends React.Component{
 		for (var item in incomes) {
 			var date = new Date(incomes[item].date);
 			if (this.state.year == date.getFullYear()) {
-				incomeaccounts.push(incomes[item].account_id);
+				if (incomeaccounts.includes(incomes[item].account_id) == false) {
+					incomeaccounts.push(incomes[item].account_id);
+				}
 				thisyearincome.push(incomes[item]);
 			}
 		}
@@ -221,8 +223,12 @@ class Tuloslaskelma extends React.Component{
 							}
 						}
 						var key = "expenses" + item;
+						// Ei oteta yksityisnostoja mukaan
+						if (this.props.accountTypes[type].number !== 2365) {
+							expensetotal += total;
+						}
+						total = total.toFixed(2);
 						renderexpenses.push(<Total value={total} key={key} />);
-						expensetotal += total;
 					}
 				}
 			}
@@ -237,8 +243,8 @@ class Tuloslaskelma extends React.Component{
 						renderincome.push(<Header name={header} key={this.props.accountTypes[type].id} />);
 						var total = 0;
 						for (var i in thisyearincome) {
-							total += parseFloat(thisyearincome[i].amount);
 							if (thisyearincome[i].account_id == incomeaccounts[item]) {
+								total += parseFloat(thisyearincome[i].amount);
 								renderincome.push(<Transaction amount={thisyearincome[i].amount} place={thisyearincome[i].place}
 								vat={thisyearincome[i].vat} key={thisyearincome[i].id} date={thisyearincome[i].date} accountTypes={this.state.accountTypes}
 								target={thisyearincome[i].target} description={thisyearincome[i].description} user={this.state.user} id={thisyearincome[i].id}
@@ -247,6 +253,7 @@ class Tuloslaskelma extends React.Component{
 						}
 						var key = "income" + item;
 						incometotal += total;
+						total = total.toFixed(2);
 						renderincome.push(<Total value={total} key={key} />);
 					}
 				}
@@ -257,6 +264,9 @@ class Tuloslaskelma extends React.Component{
 			yearoptions.push(<Option value={i} text={i} key={i}  />);
 		}
 		var tulos = incometotal + expensetotal;
+		tulos = tulos.toFixed(2);
+		incometotal = incometotal.toFixed(2);
+		expensetotal = expensetotal.toFixed(2);
 		return (
 			<div className="report">
 				Tilikausi:
